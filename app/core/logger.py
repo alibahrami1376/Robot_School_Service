@@ -2,7 +2,7 @@ import logging
 import sys
 from logging.handlers import RotatingFileHandler
 
-def setup_logger(log_level=logging.INFO):
+def setup_logger(log_level=logging.DEBUG):
     logger = logging.getLogger("bot_logger")
     logger.setLevel(log_level)
 
@@ -10,6 +10,7 @@ def setup_logger(log_level=logging.INFO):
     if not logger.handlers:
         # فرمت نمایش لاگ
         formatter = logging.Formatter("%(asctime)s | %(levelname)s | %(message)s", "%Y-%m-%d %H:%M:%S")
+
 
         # هندلر برای نمایش در کنسول
         console_handler = logging.StreamHandler(sys.stdout)
