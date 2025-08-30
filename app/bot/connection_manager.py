@@ -3,7 +3,7 @@ from telebot import TeleBot
 import requests
 from app.core.config import get_settings
 from app.core.logger import setup_logger
-from app.messages.logs import LogMessages
+from app.Text_messages.logs import LogMessages
 
 logger = setup_logger()
 
