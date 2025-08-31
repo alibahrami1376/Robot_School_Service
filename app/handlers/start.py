@@ -1,16 +1,27 @@
 from telebot.types import Message
 from app.views.keyboards import rep_mark
+from app.core.logger import LogService
 
+data = {723644977:"Alibahrami" }
 
-def register(bot):
+def Start(bot):
+    LogService._root.debug("handelers.start.register.start")
+
     @bot.message_handler(commands=['start'])
     def handle_start(m: Message):
-        bot.send_message(m.chat.id, "سلام! 👋 به بات خوش اومدی.", reply_markup=rep_mark)
 
-    # @bot.message_handler(commands=['help'])
-    # def handle_help(m: Message):
-    #     bot.send_message(m.chat.id, "دستورها: /start /help /btn")
+        if m.chat.username is  None:
+            bot.send_message(m.chat.id,"please set usrname....")
+            return
+      
+        user = data.get(m.chat.id)
 
-    # @bot.message_handler(commands=['btn'])
-    # def handle_btn(m: Message):
-    #     bot.send_message(m.chat.id, "یه دکمه inline:", reply_markup=rep_mark)
+        if user :
+            bot.send_message(m.chat.id,F"hi {user} ......")
+        else :
+            data[m.chat.id]=m.chat.username
+            bot.send_message(m.chat.id, "سلام! 👋 به بات خوش اومدی.", reply_markup=rep_mark)
+
+
+
+
