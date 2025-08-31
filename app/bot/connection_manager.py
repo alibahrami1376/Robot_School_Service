@@ -1,54 +1,57 @@
 import time
-from telebot import TeleBot
+from telebot import TeleBot,apihelper
 import requests
 from app.core.config import get_settings
-from app.core.logger import setup_logger
 from app.Text_messages.logs import LogMessages
-
-logger = setup_logger()
-
-RETRY_INTERVAL = 10 # ثانیه بین هر تلاش مجدد
+from app.core.logger import LogService
 
 settings = get_settings()
 
-def create_bot_with_retry():
+RETRY_INTERVAL = 10 # ثانیه بین هر تلاش مجدد
+
+def create_bot_with_retry(middleware:bool = False):
     
+    LogService._root.debug("Bot.connection_manager.create_bot_with_retry.start")
 
     while True:
         try:
-            logger.info(LogMessages.STARTUP_TRY_CONNECT)
+            LogService._root.debug(LogMessages.STARTUP_TRY_CONNECT)
+            if middleware:
+                apihelper.ENABLE_MIDDLEWARE = True  
             bot = TeleBot(settings.BOT_TOKEN)
             bot.get_me()  # بررسی اتصال واقعی
-            logger.info(LogMessages.STARTUP_SUCCESS)
+            LogService._root.debug(LogMessages.STARTUP_SUCCESS)
             return bot
 
         except requests.exceptions.RequestException:
-            logger.warning(LogMessages.UNEXPECTED_SHUTDOWN)
+            LogService._root.warning(LogMessages.UNEXPECTED_SHUTDOWN)
             time.sleep(RETRY_INTERVAL)
 
         except Exception as e:
-            logger.exception(LogMessages.STARTUP_FAILED.format(error=e))
+            LogService._root.exception(LogMessages.STARTUP_FAILED.format(error=e))
             time.sleep(RETRY_INTERVAL)
 
 
 def run_bot_white_try(bot:TeleBot):
-    
+    LogService._root.debug("Bot.connection_manager.run_bot_white_try.start")
+
     while True:
+        
         try:
-            logger.info("🔥 Bot starting...")
+            LogService._root.info("🔥 Bot starting...")
             bot.polling(non_stop=True)
         except requests.exceptions.ProxyError:
-            logger.warning("⚠️ Proxy Error. Retrying in %s seconds...", RETRY_INTERVAL)
+            LogService._root.warning("⚠️ Proxy Error. Retrying in %s seconds...", RETRY_INTERVAL)
             time.sleep(RETRY_INTERVAL)
         except requests.exceptions.RequestException:
-            logger.warning("❌ Unexpected shutdown. Retrying in %s seconds...", RETRY_INTERVAL)
+            LogService._root.warning("❌ Unexpected shutdown. Retrying in %s seconds...", RETRY_INTERVAL)
             time.sleep(RETRY_INTERVAL)
         except requests.exceptions.ConnectionError:
-            logger.warning("❌ConnectionError   %s seconds ", RETRY_INTERVAL)
+            LogService._root.warning("❌ConnectionError   %s seconds ", RETRY_INTERVAL)
             time.sleep(RETRY_INTERVAL)
         except requests.exceptions.Timeout:
-            logger.warning("❌ Timeout   %s seconds ", RETRY_INTERVAL)
+            LogService._root.warning("❌ Timeout   %s seconds ", RETRY_INTERVAL)
             time.sleep(RETRY_INTERVAL)    
         except Exception as e:
-            logger.exception("🚨 Unknown error: %s", e)
+            LogService._root.exception("🚨 Unknown error: %s", e)
             time.sleep(RETRY_INTERVAL)
