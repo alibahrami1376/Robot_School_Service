@@ -52,7 +52,7 @@ class InlineKeyboard:
 main = InlineKeyboard([
     ("رانندگان","Driver"),
     ("دانش آموزان", "Student"),
-    ("ارتباط با ما ", "Contact us")
+    ("ارتباط با ما ", "Contact_us")
 ], column=2)
 
 
