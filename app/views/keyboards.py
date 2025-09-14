@@ -26,35 +26,53 @@ class ReplyKeyboard:
                 self.markup.row(*buttons[i:i + column])
         
 
+
 class InlineKeyboard:
-    def __init__(self, list_name_buttons: list = None, row_key: int = 0, column: int = 0):
+    def __init__(self, list_buttons: list = None, row_key: int = 0, column: int = 0):
         self.row = row_key
         self.column = column
         self.markup = types.InlineKeyboardMarkup()
-        if list_name_buttons:
-            self.create_button(self.row, self.column, list_name_buttons)
+        if list_buttons:
+            self.create_button(self.row, self.column, list_buttons)
 
     def get_markup(self):
         return self.markup
 
-    def create_button(self, row: int, column: int, list_name_buttons: list):
+    def create_button(self, row: int, column: int, list_buttons: list):
         if column == 0 or row == 0:
             # هر دکمه در یک ردیف
-            for text in list_name_buttons:
-                self.markup.add(types.InlineKeyboardButton(text, callback_data=text))
+            for text, cb in list_buttons:
+                self.markup.add(types.InlineKeyboardButton(text, callback_data=cb))
         else:
             # دکمه‌ها بر اساس تعداد ستون‌ها
-            buttons = [types.InlineKeyboardButton(text, callback_data=text) for text in list_name_buttons]
+            buttons = [types.InlineKeyboardButton(text, callback_data=cb) for text, cb in list_buttons]
             for i in range(0, len(buttons), column):
                 self.markup.row(*buttons[i:i + column])
 
+main = InlineKeyboard([
+    ("رانندگان","Driver"),
+    ("دانش آموزان", "Student"),
+    ("ارتباط با ما ", "Contact us")
+], column=2)
 
 
-rep= ReplyKeyboard(list_name_buttons=["driver","student"])
+student = InlineKeyboard([
+    ("ثبت نام ","reg_ST"),
+    ("اطلاعات دانش آموز ", "info_ST"),
+    ("جزییات مالی ", "Financial_ST")
+], column=2)
 
-kb = InlineKeyboard(["ثبت نام ", "اطلاعات دانش اموزان ", "جزییات مالی ",], column=2)
+
+driver = InlineKeyboard([
+    ("ثبت نام ","reg_DR"),
+    ("اطلاعات دانش اموزان  ", "info_DR"),
+    (" جزییات مالی ", "Financial_DR")
+], column=2)
 
 
-rep_mark= rep.get_markup()
+main_mark =main.get_markup()
+student_mark =student.get_markup()
+driver_mark =driver.get_markup() 
+
 
  
