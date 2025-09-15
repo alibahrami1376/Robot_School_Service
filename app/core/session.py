@@ -7,16 +7,14 @@ class step(Enum):
     START= "Start"
     DRIVER= "DRIVER"
     DRIVER_RG="DRIVER_RG"
-
-
     STUDENT= "STUDENT"
     CONTACT_US= "CONTACT_US"
     STUDENT_RG="STUDENT_RG"
-    ENTER_NAME = 2
-    ENTER_PHONE = 3
-    ENTER_EMAIL = 4
-    CONFIRM = 5
-    DONE = 6
+    ENTER_NAME = "2"
+    ENTER_PHONE = "3"
+    ENTER_EMAIL = "4"
+    CONFIRM = "5"
+    DONE = "6"
 
 
 
@@ -34,7 +32,6 @@ class SessionRegister:
 
 
     def start(self,message: Message):
-        """شروع یا ریست سشن کاربر"""
         self.sessions[message.from_user.id] = {"step": step.START, "data": {},"last_update": time.time(),"Last_message":message.message_id,
                                             "from_user":{"first_name":message.from_user.first_name,"username":message.from_user.username,
                                                          'last_name': message.from_user.last_name}}
@@ -54,7 +51,7 @@ class SessionRegister:
         """مرحله فعلی کاربر"""
         return self.sessions.get(user_id, {}).get("step", 0)
 
-    def set_step(self, user_id: int, step: int):
+    def set_step(self, user_id: int, step: str):
         """تغییر مرحله"""
         if self.exists(user_id):
             self.sessions[user_id]["step"] = step
