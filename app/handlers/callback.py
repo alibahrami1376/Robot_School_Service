@@ -1,6 +1,8 @@
 
 from telebot import TeleBot
 from telebot.types import CallbackQuery
+from app.views.keyboards import driver_mark,student_mark
+from app.Text_messages.system import SystemMessages
 
 
 def callback_handelers(bot:TeleBot):
@@ -12,10 +14,10 @@ def callback_handelers(bot:TeleBot):
            
             case "Driver":
                 bot.delete_message(call.message.chat.id, call.message.message_id)
-                bot.send_message(call.message.chat.id,"Driver")
+                bot.send_message(call.message.chat.id,SystemMessages.CHOICE,reply_markup=driver_mark)
             case "Student":
                 bot.delete_message(call.message.chat.id, call.message.message_id)
-                bot.send_message(call.message.chat.id,"Student")
+                bot.send_message(call.message.chat.id,SystemMessages.CHOICE,reply_markup=student_mark)
             case "Contact_us":
                 bot.delete_message(call.message.chat.id, call.message.message_id)    
                 bot.send_message(call.message.chat.id,"Contact_us")
