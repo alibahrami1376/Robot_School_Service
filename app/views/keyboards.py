@@ -69,10 +69,16 @@ driver = InlineKeyboard([
     (" جزییات مالی ", "Financial_DR")
 ], column=2)
 
+back_menu= InlineKeyboard([
+    (" مرحله قبل ","previous_stage"),
+    ("منوی اصلی ", "main_menu"),
+], column=2)
 
 main_mark =main.get_markup()
 student_mark =student.get_markup()
-driver_mark =driver.get_markup() 
+driver_mark =driver.get_markup()
+back_menu_mark =back_menu.get_markup()
+
 
 
  
