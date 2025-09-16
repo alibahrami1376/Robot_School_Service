@@ -6,7 +6,7 @@ from enum import Enum
 class step(Enum):
     START= "Start"
     DRIVER= "DRIVER"
-    DRIVER_RG="DRIVER_RG"
+    DRIVER_RG_INPUT_NAME="DRIVER_RG_INPUT_NAME"
     STUDENT= "STUDENT"
     CONTACT_US= "CONTACT_US"
     STUDENT_RG="STUDENT_RG"
