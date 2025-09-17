@@ -1,7 +1,12 @@
 import time
-
+from transitions import Machine
 from telebot.types import Message
 from enum import Enum
+
+
+
+
+
 
 class step(Enum):
     START= "Start"
@@ -15,8 +20,21 @@ class step(Enum):
     ENTER_EMAIL = "4"
     CONFIRM = "5"
     DONE = "6"
-
-
+    step_map={0:"Start",1:["DRIVER","STUDENT","CONTACT_US"]}
+    step_states = {
+        1: "driver_ask_firstname",
+        2: "driver_ask_lastname",
+        3: "driver_father_name",
+        4: "driver_National_code",
+        5: "driver_Insurance_number",
+        6: "driver_Insurance_images",
+        7: "driver_Technical_inspection_images",
+        8: "driver_Green_leaf_images",
+        9: "driver_addres_home",
+        10: "driver_Location_home",
+        11: "driver_Postal_code",
+        12:"final"
+    }
 
 
 class SessionRegister:
@@ -30,12 +48,13 @@ class SessionRegister:
     # {user_id: {"step": int, "data": dict, "last_update": timestamp}}
     expire_time = 0
 
-
+    
     def start(self,message: Message):
-        self.sessions[message.from_user.id] = {"step": step.START, "data": {},"last_update": time.time(),"Last_message":message.message_id,
+        self.sessions[message.from_user.id] = {"step_reg":None ,"step": step.START, "data": {},
+                                               "last_update": time.time(),"Last_message":message.message_id,
                                             "from_user":{"first_name":message.from_user.first_name,"username":message.from_user.username,
-                                                         'last_name': message.from_user.last_name}}
-
+                                                         'last_name': message.from_user.last_name}
+                                        }
 
 
     def exists(self, user_id: int) -> bool:
@@ -56,7 +75,16 @@ class SessionRegister:
         if self.exists(user_id):
             self.sessions[user_id]["step"] = step
             self.sessions[user_id]["last_update"] = time.time()
+    
+    def set_step_reg(self, user_id: int, step:int):
+        """ریجستر  تغییر مرحله"""
+        if self.exists(user_id):
+            self.sessions[user_id]["step_reg"] = step
+            self.sessions[user_id]["last_update"] = time.time()
+    def get_step_reg(self,user_id):
 
+        return self.sessions[user_id]["step_reg"]
+    
     def set_last_messageid(self,user_id: int,message_id: int):
         
         self.sessions[user_id]["Last_message"]= message_id
@@ -79,7 +107,6 @@ class SessionRegister:
         """پاک کردن سشن (پایان ثبت‌نام)"""
         if user_id in self.sessions:
             del self.sessions[user_id]
-
 
 
 
